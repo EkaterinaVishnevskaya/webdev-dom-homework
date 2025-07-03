@@ -65,7 +65,41 @@
 
   <script>
     "use strict";
-    // Код писать здесь
+    const button = document.querySelector('.add-form-button');
+
+    button.addEventListener('click', function () {
+      const date = new Date();
+      const month = date.getMonth();
+      const year = date.getFullYear() % 100;
+      const day = date.getDate();
+      const hour = date.getHours();
+      const minutes = date.getMinutes();
+      const newComm = document.createElement('li');
+      const commList = document.querySelector('.comments');
+      const name = document.querySelector('.add-form-name').value;
+      const commText = document.querySelector('.add-form-text').value;
+      if ((name == '') | (commText == '')) {
+        alert("Вы не ввели имя или ваш комментарий пуст");
+        return;
+      }
+      newComm.className = 'comment'
+      newComm.innerHTML = `<div class="comment-header">
+            <div>${name}</div>
+            <div>${(day < 10 ? '0' : '') + day}.${(month < 10 ? '0' : '') + month}.${(year < 10 ? '0' : '') + year}  ${(hour < 10 ? '0' : '') + hour}:${(minutes < 10 ? '0' : '') + minutes}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${commText}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button -active-like"></button>
+            </div>
+          </div>`
+      commList.appendChild(newComm);
+    });
     console.log("It works!");
   </script>
 </html>
