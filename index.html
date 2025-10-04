@@ -1,105 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Проект "Комменты"</title>
-  <meta charset="utf-8" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
+  <head>
+    <title>Проект "Комменты"</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body>
-  <div class="container">
-    <ul class="comments">
-    </ul>
-    <div class="add-form">
-      <input type="text" class="add-form-name" placeholder="Введите ваше имя" />
-      <textarea type="textarea" class="add-form-text" placeholder="Введите ваш коментарий" rows="4"></textarea>
-      <div class="add-form-row">
-        <button class="add-form-button">Написать</button>
+  <body>
+    <div class="container">
+      <ul class="comments"></ul>
+      <div class="add-form">
+        <input
+          type="text"
+          class="add-form-name"
+          placeholder="Введите ваше имя"
+        />
+        <textarea
+          type="textarea"
+          class="add-form-text"
+          placeholder="Введите ваш коментарий"
+          rows="4"
+        ></textarea>
+        <div class="add-form-row">
+          <button class="add-form-button">Написать</button>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 
-<script>
-  "use strict";
-  let comments = [
-    { name: 'Глеб Фокин', text: 'Это будет первый комментарий на этой странице', time: '12.02.22 12:18', isLiked: false, likes: 3 },
-    { name: 'Варвара Н.', text: 'Мне нравится как оформлена эта страница! ❤', time: '13.02.22 19:22', isLiked: true, likes: 75 }
-  ];
-
-  const sanitizeHTML = (value) => {
-    return value.replaceAll("<", '&lt;').replaceAll(">", '&gt;');
-  }
-  const nameField = document.querySelector('.add-form-name');
-  const commField = document.querySelector('.add-form-text');
-
-  const renderComments = () => {
-    const list = document.querySelector('.comments');
-    list.innerHTML = comments.map((comment, index) => {
-      console.log("It works!");
-      return `<li class="comment" data-index="${index}"">
-        <div class="comment-header">
-            <div>${comment.name}</div>
-            <div>${comment.time}</div>
-          </div>
-          <div class="comment-body">
-            <div class="comment-text">
-              ${comment.text}
-            </div>
-          </div>
-          <div class="comment-footer">
-            <div class="likes">
-              <span class="likes-counter">${comment.likes}</span>
-              <button data-index="${index}" class="like-button ${comment.isLiked ? "-active-like" : ''}"></button>
-            </div>
-          </div>
-          </li>`
-    }).join("");
-
-    const likeButtons = document.querySelectorAll('.like-button');
-    likeButtons.forEach(likeButton => {
-      likeButton.addEventListener('click', () => {
-        event.stopPropagation();
-        const index = likeButton.dataset.index;
-        const comm = comments[index];
-
-        comm.likes = comm.isLiked ? comm.likes - 1 : comm.likes + 1
-        comm.isLiked = !comm.isLiked;
-
-        renderComments();
-      });  
-    });
-
-    const commentsElements = document.querySelectorAll('.comment');
-    for (const commentElement of commentsElements) {
-      commentElement.addEventListener('click', ()=> {
-        const comm = comments[commentElement.dataset.index];
-        commField.value += `\n${comm.name}: ${comm.text}\n`;
-      })
-    }
-  };
-
-  renderComments();
-  const button = document.querySelector('.add-form-button');
-  button.addEventListener('click', () => {
-    const date = new Date();
-    const month = date.getMonth();
-    const year = date.getFullYear() % 100;
-    const day = date.getDate();
-    const hour = date.getHours();
-    const minutes = date.getMinutes();
-    const name = sanitizeHTML(nameField.value);
-    const commText = sanitizeHTML(commField.value);
-    if ((name == '') | (commText == '')) {
-      alert("Вы не ввели имя или ваш комментарий пуст");
-      return;
-    }
-    const dateStr = `${(day < 10 ? '0' : '') + day}.${(month < 10 ? '0' : '') + month}.${(year < 10 ? '0' : '') + year}  ${(hour < 10 ? '0' : '') + hour}:${(minutes < 10 ? '0' : '') + minutes}`;
-    const newComm = { name: name, text: commText, time: dateStr, isLiked: false, likes: 0 };
-    comments.push(newComm);
-    nameField.value = '';
-    commField.value = '';
-    renderComments();
-  });
-</script>
+  <script type="module" src="index.js"></script>
 </html>
