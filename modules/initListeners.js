@@ -1,6 +1,7 @@
 import { renderComments } from "./renderComments.js";
 import { sanitizeHTML } from "./sanitizeHTML.js";
-import { comments } from "./comments.js";
+import { comments, updateComments } from "./comments.js";
+import { postComment } from "./api.js";
 
 const nameField = document.querySelector(".add-form-name");
 const commField = document.querySelector(".add-form-text");
@@ -8,30 +9,18 @@ const commField = document.querySelector(".add-form-text");
 export const initAddCommentListener = () => {
   const button = document.querySelector(".add-form-button");
   button.addEventListener("click", () => {
-    const date = new Date();
-    const month = date.getMonth();
-    const year = date.getFullYear() % 100;
-    const day = date.getDate();
-    const hour = date.getHours();
-    const minutes = date.getMinutes();
     const name = sanitizeHTML(nameField.value);
     const commText = sanitizeHTML(commField.value);
     if ((name == "") | (commText == "")) {
       alert("Вы не ввели имя или ваш комментарий пуст");
       return;
     }
-    const dateStr = `${(day < 10 ? "0" : "") + day}.${(month < 10 ? "0" : "") + month}.${(year < 10 ? "0" : "") + year}  ${(hour < 10 ? "0" : "") + hour}:${(minutes < 10 ? "0" : "") + minutes}`;
-    const newComm = {
-      name: name,
-      text: commText,
-      time: dateStr,
-      isLiked: false,
-      likes: 0,
-    };
-    comments.push(newComm);
-    nameField.value = "";
-    commField.value = "";
-    renderComments();
+    postComment(commText, name).then((data) => {
+      updateComments(data);
+      renderComments();
+      nameField.value = "";
+      commField.value = "";
+    });
   });
 };
 
