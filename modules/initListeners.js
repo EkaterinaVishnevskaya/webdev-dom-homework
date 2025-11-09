@@ -15,7 +15,12 @@ export const initAddCommentListener = () => {
       alert("Вы не ввели имя или ваш комментарий пуст");
       return;
     }
+    document.querySelector(".form-loading").style.display = "block";
+    document.querySelector(".add-form").style.display = "none";
     postComment(commText, name).then((data) => {
+      document.querySelector(".form-loading").style.display = "none";
+      document.querySelector(".add-form").style.display = "flex";
+
       updateComments(data);
       renderComments();
       nameField.value = "";
