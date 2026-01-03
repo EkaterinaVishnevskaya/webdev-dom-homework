@@ -17,18 +17,42 @@ export const initAddCommentListener = () => {
     }
     document.querySelector(".form-loading").style.display = "block";
     document.querySelector(".add-form").style.display = "none";
-    postComment(commText, name).then((data) => {
-      document.querySelector(".form-loading").style.display = "none";
-      document.querySelector(".add-form").style.display = "flex";
+    postComment(commText, name)
+      .then((data) => {
+        document.querySelector(".form-loading").style.display = "none";
+        document.querySelector(".add-form").style.display = "flex";
 
-      updateComments(data);
-      renderComments();
-      nameField.value = "";
-      commField.value = "";
-    });
+        updateComments(data);
+        renderComments();
+        nameField.value = "";
+        commField.value = "";
+      })
+      .catch((error) => {
+        document.querySelector(".form-loading").style.display = "none";
+        document.querySelector(".add-form").style.display = "flex";
+
+        if (error.message === "Failed to fetch") {
+          alert("Нет интернета, попробуйте снова");
+        }
+
+        if (error.message === "Ошибка сервера") {
+          alert(error.message);
+        }
+
+        if (error.message === "Неверный запрос") {
+          alert("Имя и комментарий должны быть не короче 3х символов");
+
+          nameField.classList.add("-error");
+          commField.classList.add("-error");
+
+          setTimeout(() => {
+            nameField.classList.remove("-error");
+            commField.classList.remove("-error");
+          }, 2000);
+        }
+      });
   });
 };
-
 export const initCommentElementListener = () => {
   const commentsElements = document.querySelectorAll(".comment");
   for (const commentElement of commentsElements) {
